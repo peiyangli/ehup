@@ -73,6 +73,20 @@ start_listening(Srv1, Args)->
         permanent, 2000, supervisor, [ehup_listener_sup]}),
     supervisor:start_child(Srv1, [to_child_id(Srv1), Args]).
 
+
+
+
+
+eg_port_router()->
+    [{port, {8888, [{ip, {127,0,0,1}}]}}
+        , {router, [
+        hup_handlers
+        ,hup_test
+        ,{hup_test, "/p"}
+        ,{"/test", {hup_test, echo_query}}
+        ,{"/testa", {hup_test, echo_query, 1}}
+    ]}].
+
 start_hup(Srv, {Port, Routers})->
     Sid = to_sup_id(Srv),
     start_listening(Sid, {Port, {ehup_hup, init, Routers}}).
